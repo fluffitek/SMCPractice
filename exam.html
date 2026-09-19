@@ -1,0 +1,167 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="style.css"></link>
+	</head>
+
+	<body>
+
+		<div class="header">
+			<p>Score: <span id="score">?</span>/125</p>
+			<p>Grade: <span id="grade">?</span> (We use <b>2024</b> grade boundaries for this.)<p>
+			<button class="button2" id="end" onclick="checkForm()" hidden>End Exam</button>
+			<button class="button2" id="timer" onclick="startExam()">Start Exam</button>
+		</div>
+		<form id="form">
+			
+		</form>
+
+		<template>
+			<div class="question">
+				<b class="questionNumber"></b>
+				<br>
+				<img src="" class="questionImage" width="900px"></img>
+				<br>
+				<input class="A" type="radio" value="A">
+				<label class="Alabel">A</label>
+				<input class="B" type="radio" value="B">
+				<label class="Blabel">B</label>
+				<input class="C" type="radio" value="C">
+				<label class="Clabel">C</label>
+				<input class="D" type="radio" value="D">
+				<label class="Dlabel">D</label>
+				<input class="E" type="radio" value="E">
+				<label class="Elabel">E</label>
+				<input class="N" type="radio" value="N" checked>
+				<label class="Nlabel">I don't Know</label>
+				<br>
+			</div>
+		</template>
+		
+	</body>
+
+	<script>
+		var timer = 90*60;
+		const paramString = window.location.search;
+		const searchParams = new URLSearchParams(paramString);
+		const title = searchParams.get("title");
+		const goldThreshold = 83
+		const silverThreshold = 66
+		const bronzeThreshold = 49
+		const bmoThreshold = 110
+		var timerInterval;
+		function showContent(questionNumber, imageSource) {
+  			let temp = document.getElementsByTagName("template")[0];
+  			let clon = temp.content.cloneNode(true);
+			let form = document.getElementById("form")
+			
+			clon.querySelector(".questionNumber").innerHTML = "Question " + questionNumber + ".";
+			clon.querySelector(".questionImage").src = imageSource;
+			clon.querySelector(".A").id = "q" + questionNumber + "a";
+			clon.querySelector(".A").name = "q" + questionNumber;
+			clon.querySelector(".B").id = "q" + questionNumber + "b";
+			clon.querySelector(".B").name = "q" + questionNumber;
+			clon.querySelector(".C").id = "q" + questionNumber + "c";
+			clon.querySelector(".C").name = "q" + questionNumber;
+			clon.querySelector(".D").id = "q" + questionNumber + "d";
+			clon.querySelector(".D").name = "q" + questionNumber;
+			clon.querySelector(".E").id = "q" + questionNumber + "e";
+			clon.querySelector(".E").name = "q" + questionNumber;
+			clon.querySelector(".N").id = "q" + questionNumber + "n";
+			clon.querySelector(".N").name = "q" + questionNumber;
+			clon.querySelector(".question").id = "q" + questionNumber;
+			form.appendChild(clon);
+		}
+
+		function updateTimer()
+		{
+			timer -= 1;
+			minutes = Math.floor(timer/60);
+			seconds = timer % 60
+			document.getElementById("timer").innerHTML = minutes + ":" + seconds
+		}
+	
+		function startExam()
+		{
+			
+			for (var i = 1; i <= 25; i++)
+			{
+				document.getElementById("timer").disabled = true;
+				showContent(i, "questions/" + title+ "/" + i + ".png");
+				
+			}
+			document.getElementById("end").hidden = false
+			timerInterval = setInterval(updateTimer, 1000);
+		}
+		
+
+		async function getData(url) {
+			try {
+				const response = await fetch(url);
+				if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`);
+				}
+
+				const result = await response.json();
+				console.log(result);
+				return result;
+			} catch (error) {
+				console.error(error.message);
+			}
+			
+		}
+		
+		async function checkForm()
+		{
+			const answerKey = await getData("questions/" + title + "/answerkey.json");
+			console.log(answerKey)
+			const form = document.getElementById("form");
+			const formData = new FormData(form);
+			var score = 25;
+			clearInterval(timerInterval)
+			document.getElementById("timer").innerHTML = "COMPLETED"
+			document.getElementById("end").disabled = true
+			for (var i = 0; i < 25; i++)
+			{
+				var answer = formData.get("q" + (i+1))
+				if (answer == "N")
+				{
+					document.getElementById("q" + (i+1)).classList.add("dna");
+					score += 0
+				}
+				else if (answer == answerKey[i])
+				{
+					score += 4
+					document.getElementById("q" + (i+1)).classList.add("correct");
+				}
+				else
+				{
+					document.getElementById("q" + (i+1)).classList.add("incorrect");
+					score -= 1
+				}
+				
+			}
+
+			
+			document.getElementById("score").innerHTML = score;
+			grade = "No Award"
+			if (score > bmoThreshold)
+			{
+				grade = "Gold (+ BMO Awarded)"
+			}
+			else if (score > goldThreshold)
+			{
+				grade = "Gold ( + SK Awarded)"
+			}
+			else if (score > silverThreshold)
+			{
+				grade = "Silver"
+			}
+			else if (score > bronzeThreshold)
+			{
+				grade = "Bronze"
+			}
+			document.getElementById("grade").innerHTML = grade;
+		}
+	</script>
+</html>

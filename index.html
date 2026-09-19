@@ -1,0 +1,63 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" href="style.css"></link>
+	</head>
+
+	<body>
+
+		<div class="header">
+            <h1>Welcome to Mathematics... brother...</h1>
+		</div>
+		<form id="form">
+			
+		</form>
+
+		<template>
+			<div class="question">
+				<h2 class="paperTitle"></h2>
+                <p>Click to open the exam paper</p>
+                <a class="link button1" href="exam.html" target="_blank" >Open Paper<a>
+				<br>
+			</div>
+		</template>
+		
+	</body>
+
+	<script>
+		const paramString = window.location.search;
+		const searchParams = new URLSearchParams(paramString);
+		const year = searchParams.get("year")
+		function addPaper(prettyTitle, title) {
+  			let temp = document.getElementsByTagName("template")[0];
+  			let clon = temp.content.cloneNode(true);
+			let form = document.getElementById("form")
+			clon.querySelector(".paperTitle").innerHTML = prettyTitle;
+            clon.querySelector(".link").href = "exam.html?title=" + title;
+			form.appendChild(clon);
+		}
+
+        papers = [
+            {
+                "prettyTitle" : "Senior Maths Challenge 2023",
+                "title" : "smc2023"
+            },
+			{
+                "prettyTitle" : "Senior Maths Challenge 2024",
+                "title" : "smc2024"
+            },
+            {
+                "prettyTitle" : "Senior Maths Challenge 2025",
+                "title" : "smc2025"
+            }
+        ]
+
+		for (var i = 0; i < papers.length; i++)
+        {
+            var paper = papers[i]
+            
+            addPaper(paper.prettyTitle, paper.title)
+        }
+		
+	</script>
+</html>

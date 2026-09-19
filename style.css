@@ -1,0 +1,80 @@
+html
+{
+	font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+.question
+{
+	background-color: #aaaaff;
+	margin: 10px;
+	width:920px;
+	padding: 30px;
+	border: solid 3px #35354b;
+	border-radius: 8px;
+	margin-left: auto;
+	margin-right:auto;
+}
+
+.header
+{
+	background-color: #f8ffaa;
+	margin: 30px;
+	width:920px;
+	padding: 10px;
+	border: solid 3px #4b3535;
+	border-radius: 8px;
+	margin-left: auto;
+	margin-right:auto;
+}
+
+.questionImage
+{
+	margin:10px;
+	border-radius: 8px;
+	
+}
+
+input
+{
+	margin: 20px;
+	padding: 20px;
+}
+
+.button1
+{
+	background-color: #d1d1ff;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: solid 3px #35354b;
+	border-radius: 8px;
+	font-weight: bold;
+	text-decoration:none;
+	color:#35354b;
+}
+.button2
+{
+	background-color: #fbffcf;
+	margin: 10px;
+	padding: 10px;
+	border: solid 3px #35354b;
+	border-radius: 8px;
+	margin: 5px;
+	font-weight: bold;
+	text-decoration:none;
+}
+
+.correct
+{
+	background-color: rgb(149, 225, 149);
+}
+
+.incorrect
+{
+	background-color: rgb(225, 149, 149);
+}
+
+.dna
+{
+	background-color: rgb(177, 149, 225);
+}
